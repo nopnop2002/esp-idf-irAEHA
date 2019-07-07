@@ -7,14 +7,14 @@ make menuconfig
 make flash
 ```
 
-\*There is no MENU ITEM where this application is peculiar.   
+\*このアプリ特有のメニュー項目はありません。
 
 --- 
 
 # How to use
 
-Select IR code by Button press.   
-When a button is pressed for more than 2 seconds, It fire IR Code.   
+ボタンを押してIRコードを選択します。
+ボタンが2秒以上押されると、IRコードを発行します。
 
 ![Stick](https://user-images.githubusercontent.com/6020549/60762476-fefed780-a09b-11e9-9e5b-b050e068051d.JPG)
 
