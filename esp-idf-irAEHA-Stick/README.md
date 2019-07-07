@@ -7,7 +7,7 @@ make menuconfig
 make flash
 ```
 
-\*There is no MENU ITEM where this application is peculiar.   
+*There is no MENU ITEM where this application is peculiar.   
 
 --- 
 
