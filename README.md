@@ -8,7 +8,7 @@ ESP-IDFには[こちら](https://github.com/espressif/esp-idf/tree/master/examples/pe
 ---
 
 # リモコンコード解析
-リモコンコードの解析には[rmt_aeha_rx](https://github.com/nopnop2002/esp-idf-irAEHA/rmt_aeha_rx)を使います。   
+リモコンコードの解析には[rmt_aeha_rx](https://github.com/nopnop2002/esp-idf-irAEHA/tree/master/rmt_aeha_rx)を使います。   
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
@@ -45,6 +45,10 @@ Display.defの書式は以下の通りです。
 ```
 表示するテキスト,customerコード,parityコード,dataコードの数,data0,data1,data2......;
 ```
+
+\*AEHAフォーマットのパリティコードは、本来、カスタマーコードを4ビット単位でXORをとったものですが、
+調べてみるとパリティではなく、普通の1番目のデータとして使っているリモコンもあるようです。   
+そこで、送信時のパリティコードはライブラリ内部で自動計算せずに、外部から与えるようにしています。
 
 
 
