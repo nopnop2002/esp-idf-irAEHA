@@ -1,7 +1,7 @@
 # External IR Transmiter
-M5Stack don't have internal IR Transmitter.   
-You have to attach IR Unit to GROVE-B port.   
-It works very stable.   
+M5StackはIRトランスミッターを内蔵していません。
+IRユニットをGROVE-Bポートに取り付ける必要があります。
+非常に安定し動きます。
 
 ![Stack-1](https://user-images.githubusercontent.com/6020549/59958246-574faa00-94de-11e9-95f1-24871f8c8f20.JPG)
 
@@ -16,14 +16,14 @@ make menuconfig
 make flash
 ```
 
-\*There is no MENU ITEM where this application is peculiar.   
+\*このアプリ特有のメニュー項目はありません。
 
 --- 
 
 # How to use
 
-Select IR code by ButtonB/C (Center/Right Button) press.   
-Fire IR code by ButtonA (Left Button) press.   
+ボタンB / C（中央/右ボタン）を押してIRコードを選択します。
+ButtonA（左ボタン）を押してIRコードを発射します。
 
 ![Stack](https://user-images.githubusercontent.com/6020549/60762494-e17e3d80-a09c-11e9-8259-641bc2dcc47d.JPG)
 
