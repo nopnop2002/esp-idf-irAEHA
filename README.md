@@ -1,9 +1,12 @@
 # esp-idf-irAEHA
 M5Stick and M5StickC as a remote control transmitter.   
+This is AEHA IR Format exclusive use.   
+AEHA IR Format is used only in Japan.   
 
 ESP-IDFには[こちら](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/rmt_nec_tx_rx)に赤外線送受信のサンプルが付属していますが、NECフォーマットしか対応していません。   
 
 我が家のテレビは家製協(AEHA)フォーマットなので、家製協(AEHA)フォーマットに対応したアプリケーションを作りました。   
+M5Stick M5StickCをリモコンの送信機として使うことができます。   
 
 ---
 
