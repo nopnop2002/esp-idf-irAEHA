@@ -25,5 +25,5 @@ make flash
 ボタンB / C（中央/右ボタン）を押してIRコードを選択します。
 ButtonA（左ボタン）を押してIRコードを発射します。
 
-![Stack](https://user-images.githubusercontent.com/6020549/60762494-e17e3d80-a09c-11e9-8259-641bc2dcc47d.JPG)
+![Stack](https://user-images.githubusercontent.com/6020549/60800362-0b745480-a1b0-11e9-82df-4bb29542a463.JPG)
 
