@@ -44,6 +44,7 @@ static void rmt_example_aeha_rx_task()
         //RMT driver will push all the data it receives to its ringbuffer.
         //We just need to parse the value and return the spaces of ringbuffer.
         rmt_item32_t* item = (rmt_item32_t*) xRingbufferReceive(rb, &rx_size, 1000);
+        ESP_LOGI(TAG, "xRingbufferReceive rx_size=%d", rx_size);
         if(item) {
             ESP_LOGI(TAG, "RMT RCV rx_size=%d", rx_size);
             uint16_t customer;
@@ -69,9 +70,12 @@ static void rmt_example_aeha_rx_task()
                 }
             }
             //after parsing the data, return spaces to ringbuffer.
+            ESP_LOGI(TAG, "vRingbufferReturnItem");
             vRingbufferReturnItem(rb, (void*) item);
+#if 0
         } else {
             break;
+#endif
         }
     }
     vTaskDelete(NULL);
