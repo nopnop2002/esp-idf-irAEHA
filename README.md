@@ -56,8 +56,8 @@ Display.def‚Ì‘®‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·B
 
 
 ```
-#This is define file for isp-idf-irSend
-#Text,cmd,addr;
+#This is define file for isp-idf-irAEHA
+#Text,customer,parity,number_of_data,data0,data1,data2.....;
 Power,0x2002,0x00,4,0x08,0x00,0x3d,0xbd;	TV on/off
 Ch 1,0x2002,0x00,4,0x08,0x09,0x40,0xc9;		Channel 1
 Ch 2,0x2002,0x00,4,0x08,0x09,0x41,0xc8;		Channel 2
