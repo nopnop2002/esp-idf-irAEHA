@@ -14,7 +14,7 @@ make flash
 # How to use
 
 ボタンを押してIRコードを選択します。
-ボタンが2秒以上押されると、IRコードを発行します。
+ボタンを2秒以上押すと、IRコードを発行します。
 
 ![Stick](https://user-images.githubusercontent.com/6020549/60762476-fefed780-a09b-11e9-9e5b-b050e068051d.JPG)
 
