@@ -12,8 +12,8 @@ IRユニットをGROVE-Bポートに取り付ける必要があります。
 ```
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
 cd esp-idf-irAEHA/esp-idf-irAEHA-Stack
-make menuconfig
-make flash
+idf.py menuconfig
+idf.py flash
 ```
 
 \*このアプリ特有のメニュー項目はありません。

@@ -16,8 +16,8 @@ M5Stick M5StickCをリモコンの送信機として使うことができます。
 ```
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
 cd esp-idf-irAEHA/rmt_aeha_rx
-make menuconfig
-make flash monitor
+idf.py menuconfig
+idf.py flash monitor
 ```
 
 赤外線受信モジュールをGPIO19に接続します。

@@ -3,8 +3,8 @@
 ```
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
 cd esp-idf-irAEHA/esp-idf-irAEHA-StickC
-make menuconfig
-make flash
+idf.py menuconfig
+idf.py flash
 ```
 
 \*このアプリ特有のメニュー項目はありません。
