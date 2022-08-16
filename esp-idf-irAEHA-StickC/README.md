@@ -4,12 +4,13 @@
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
 cd esp-idf-irAEHA/esp-idf-irAEHA-StickC
 idf.py menuconfig
-idf.py flash
+idf.py flash -b115200
 ```
 
-\*このアプリ特有のメニュー項目はありません。
+\*このアプリ特有のメニュー項目はありません。   
 
---- 
+__Flashの際に書き込みスピードの指定が必要です。__   
+
 
 # How to use
 
