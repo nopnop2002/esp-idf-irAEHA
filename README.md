@@ -3,68 +3,89 @@ M5Stick and M5StickC as a remote control transmitter.
 This is AEHA IR Format exclusive use.   
 AEHA IR Format is used only in Japan.   
 
-ESP-IDFには[こちら](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/rmt_nec_tx_rx)に赤外線送受信のサンプルが付属していますが、NECフォーマットしか対応していません。   
+ESP-IDFには[こちら](https://github.com/espressif/esp-idf/tree/master/examples/peripherals/rmt/ir_nec_transceiver)に赤外線送受信のサンプルが付属していますが、
+NECフォーマットしか対応していません。   
 
 我が家のテレビは家製協(AEHA)フォーマットなので、家製協(AEHA)フォーマットに対応したアプリケーションを作りました。   
-M5Stick M5StickCをリモコンの送信機として使うことができます。   
+M5Stick M5StickC(+)をリモコンの送信機として使うことができます。   
 
----
+
+# Software requirements
+ESP-IDF V4.4.   
+ESP-IDF V5 では RMT ドライバーの仕様が大幅に変更されました。    
+
 
 # リモコンコード解析
-リモコンコードの解析には[rmt_aeha_rx](https://github.com/nopnop2002/esp-idf-irAEHA/tree/master/rmt_aeha_rx)を使います。   
+リモコンコードの解析には esp-idf-irAEHA-analysis を使います。   
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-irAEHA
-cd esp-idf-irAEHA/rmt_aeha_rx
+cd esp-idf-irAEHA/esp-idf-irAEHA-analysis
 idf.py menuconfig
 idf.py flash monitor
 ```
 
 赤外線受信モジュールをGPIO19に接続します。
 赤外線送信機は使用しません。
-GPIO19を変更したい場合は、以下を変更することで任意のGPIOを使用することができます。
-
-```
-#define RMT_RX_GPIO_NUM  19     /*!< GPIO number for receiver */
-```
+GPIO19を変更したい場合は、menuconfig で任意のGPIOに変更することができます。
 
 
-ファームをビルドしてボードに書き込んだら、モニターツールを実行してシリアル出力を表示します。
-リモコンのボタンを押すと、受信した赤外線コードが表示されます。
+ファームをビルドしてボードに書き込んだら、モニターツールを実行してシリアル出力を表示します。   
+リモコンのボタンを押すと、受信した赤外線コードが表示されます。   
 こちらはテレビの電源ボタンを押したときの表示です。   
+なぜか、３回同じコードが発射されていることが分かります。   
 
 ```
-I (23850) AEHA: RMT RCV --- customer: 0x2002 parity: 0x00 index: 4
-I (23850) AEHA: RMT RCV --- data[0]: 0x08
-I (23860) AEHA: RMT RCV --- data[1]: 0x00
-I (23860) AEHA: RMT RCV --- data[2]: 0x3d
-I (23870) AEHA: RMT RCV --- data[3]: 0xbd
+I (6770) AEHA: Scan success
+I (6770) AEHA: Scan Data[0]: 0x02
+I (6770) AEHA: Scan Data[1]: 0x20
+I (6770) AEHA: Scan Data[2]: 0x80
+I (6780) AEHA: Scan Data[3]: 0x00
+I (6780) AEHA: Scan Data[4]: 0x3d
+I (6780) AEHA: Scan Data[5]: 0xbd
+I (6900) AEHA: Scan success
+I (6910) AEHA: Scan Data[0]: 0x02
+I (6910) AEHA: Scan Data[1]: 0x20
+I (6910) AEHA: Scan Data[2]: 0x80
+I (6910) AEHA: Scan Data[3]: 0x00
+I (6910) AEHA: Scan Data[4]: 0x3d
+I (6920) AEHA: Scan Data[5]: 0xbd
+I (7040) AEHA: Scan success
+I (7040) AEHA: Scan Data[0]: 0x02
+I (7040) AEHA: Scan Data[1]: 0x20
+I (7040) AEHA: Scan Data[2]: 0x80
+I (7040) AEHA: Scan Data[3]: 0x00
+I (7050) AEHA: Scan Data[4]: 0x3d
+I (7050) AEHA: Scan Data[5]: 0xbd
 ```
 
 # 赤外線コードの登録
 このようにして解析した赤外線コードをfontディレクトリのDisplay.defに登録します。   
 Display.defの書式は以下の通りです。   
+行の終端はセミコロンです。   
 
 ```
-表示するテキスト,customerコード,parityコード,dataコードの数,data0,data1,data2......;
+表示するテキスト,発射する回数,data0,data1,data2......;Comment
 ```
 
-*AEHAフォーマットのパリティコードは、本来、カスタマーコードを4ビット単位でXORをとったものですが、
-調べてみるとパリティではなく、普通の1番目のデータとして使っているリモコンもあるようです。   
-そこで、送信時のパリティコードはライブラリ内部で自動計算せずに、外部から与えるようにしています。
+data0とdata1はCustomer Codeと呼ばれています。   
+data2はParity Codeと呼ばれています。   
+Parity Codeは、本来、Customer Codeを4ビット単位でXORを取った値ですが、
+調べてみるとそのルールには従わず、普通の1番目のデータとして使っているリモコンもあるようです。   
+そこで、Parity Codeはライブラリ内部で自動計算せずに、外部から与えるようにしています。
 
 
 
 ```
 #This is define file for isp-idf-irAEHA
-#Text,customer,parity,number_of_data,data0,data1,data2.....;
-Power,0x2002,0x00,4,0x08,0x00,0x3d,0xbd;	TV on/off
-Ch 1,0x2002,0x00,4,0x08,0x09,0x40,0xc9;		Channel 1
-Ch 2,0x2002,0x00,4,0x08,0x09,0x41,0xc8;		Channel 2
-Ch 3,0x2002,0x00,4,0x08,0x09,0x42,0xcb;		Channel 3
-Ch 4,0x2002,0x00,4,0x08,0x09,0x43,0xca;		Channel 4
-Ch 5,0x2002,0x00,4,0x08,0x09,0x44,0xcd;		Channel 5
-Ch 6,0x2002,0x00,4,0x08,0x09,0x45,0xcc;		Channel 6
+#Text,number of fire,data0,data1,data2.....;
+Power,esp-idf-irAEHA-Stack0x00,0x3d,0xbd;	TV on/off
+Ch 1,3,0x02,0x20,0x80,0x09,0x40,0xc9;		Channel 1
+Ch 2,3,0x02,0x20,0x80,0x09,0x41,0xc8;		Channel 2
+Ch 3,3,0x02,0x20,0x80,0x09,0x42,0xcb;		Channel 3
+Ch 4,3,0x02,0x20,0x80,0x09,0x43,0xca;		Channel 4
+Ch 5,3,0x02,0x20,0x80,0x09,0x44,0xcd;		Channel 5
+Ch 6,3,0x02,0x20,0x80,0x09,0x45,0xcc;		Channel 6
 ```
 
 
