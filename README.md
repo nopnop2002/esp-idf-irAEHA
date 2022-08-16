@@ -95,3 +95,6 @@ TV Channel 12,3,0x02,0x20,0x80,0x09,0x4b,0xc2; Channel 12
 ```
 
 
+# 家製協(AEHA)フォーマット
+
+![ir_aeha](https://user-images.githubusercontent.com/6020549/184791479-c666a21d-5a3e-407b-9dec-a9c9e0df34ac.png)
