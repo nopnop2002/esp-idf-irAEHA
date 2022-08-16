@@ -649,7 +649,7 @@ void tft(void *pvParameters)
 	rmt_driver_install(RMT_TX_CHANNEL, 0, 0);
 	ir_builder_config_t ir_builder_config = IR_BUILDER_DEFAULT_CONFIG((ir_dev_t)RMT_TX_CHANNEL);
 	ir_builder_config.flags |= IR_TOOLS_FLAGS_PROTO_EXT;
-	ir_builder = ir_builder_rmt_new_nec(&ir_builder_config);
+	ir_builder = ir_builder_rmt_new_aeha(&ir_builder_config);
 	ESP_LOGI(pcTaskGetName(0), "Setup IR transmitter done");
 
 	// Setup Screen
@@ -667,8 +667,11 @@ void tft(void *pvParameters)
 	}
 	for(int i=0;i<readLine;i++) {
 		ESP_LOGI(pcTaskGetName(0), "display[%d].display_text=[%s]",i, display[i].display_text);
-		ESP_LOGI(pcTaskGetName(0), "display[%d].ir_cmd=[0x%02x]",i, display[i].ir_cmd);
-		ESP_LOGI(pcTaskGetName(0), "display[%d].ir_addr=[0x%02x]",i, display[i].ir_addr);
+		ESP_LOGI(pcTaskGetName(0), "display[%d].ir_fire_counter=[%d]",i, display[i].ir_fire_counter);
+		ESP_LOGI(pcTaskGetName(0), "display[%d].ir_data_num=[%d]",i, display[i].ir_data_num);
+		for(int j=0;j<display[i].ir_data_num;j++) {
+			ESP_LOGI(pcTaskGetName(0), "display[%d].ir_data[%d]=[0x%02x]",i, j, display[i].ir_data[j]);
+		}
 	}
 
 	// Initial Screen
@@ -708,25 +711,18 @@ void tft(void *pvParameters)
 
 		} else if (cmdBuf.command == CMD_SELECT) {
 			ESP_LOGI(pcTaskGetName(0), "selected=%d",selected);
-			ESP_LOGI(pcTaskGetName(0), "ir_cmd=0x%02x",display[selected].ir_cmd);
-			ESP_LOGI(pcTaskGetName(0), "ir_addr=0x%02x",display[selected].ir_addr);
-			uint16_t cmd = display[selected].ir_cmd;
-			uint16_t addr = display[selected].ir_addr;
-			cmd = ((~cmd) << 8) |  cmd; // Reverse cmd + cmd
-			addr = ((~addr) << 8) | addr; // Reverse addr + addr
-			ESP_LOGI(pcTaskGetName(0), "cmd=0x%x",cmd);
-			ESP_LOGI(pcTaskGetName(0), "addr=0x%x",addr);
-
+			ESP_LOGI(pcTaskGetName(0), "ir_fire_counter=%d",display[selected].ir_fire_counter);
+			ESP_LOGI(pcTaskGetName(0), "ir_data_num=%d",display[selected].ir_data_num);
+			for (int i=0;i<display[selected].ir_data_num;i++) {
+				ESP_LOGI(pcTaskGetName(0), "ir_data[%d]=%02x",i, display[selected].ir_data[i]);
+			}
 			// Send new key code
-			ESP_ERROR_CHECK(ir_builder->build_frame(ir_builder, addr, cmd));
+			ESP_ERROR_CHECK(ir_builder->build_frame(ir_builder, display[selected].ir_data_num, display[selected].ir_data));
 			ESP_ERROR_CHECK(ir_builder->get_result(ir_builder, &items, &length));
 			//To send data according to the waveform items.
-			rmt_write_items(RMT_TX_CHANNEL, items, length, false);
-			// Send repeat code
-			vTaskDelay(pdMS_TO_TICKS(ir_builder->repeat_period_ms));
-			ESP_ERROR_CHECK(ir_builder->build_repeat_frame(ir_builder));
-			ESP_ERROR_CHECK(ir_builder->get_result(ir_builder, &items, &length));
-			rmt_write_items(RMT_TX_CHANNEL, items, length, false);
+			for (int i=0;i<display[selected].ir_fire_counter;i++) {
+				rmt_write_items(RMT_TX_CHANNEL, items, length, false);
+			}
 		}
 	} // end while
 
