@@ -5,7 +5,6 @@ IRユニットをGROVE-Aポートに取り付ける必要があります。
 
 ![Stack-1](https://user-images.githubusercontent.com/6020549/184788974-11da243f-1018-4bd4-ac8a-3308408df635.JPG)
 
----
 
 # How to build
 
@@ -18,7 +17,6 @@ idf.py flash
 
 \*このアプリ特有のメニュー項目はありません。
 
---- 
 
 # How to use
 
