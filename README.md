@@ -13,6 +13,10 @@ M5Stick M5StickC(+)をリモコンの送信機として使うことができます。
 # Software requirements
 ESP-IDF V4.4.   
 ESP-IDF V5 では RMT ドライバーの仕様が大幅に変更されました。    
+ESP-IDF V5 では、ビルド時に以下の警告が表示されますが、機能します。   
+```
+#warning "The legacy RMT driver is deprecated, please use driver/rmt_tx.h and/or driver/rmt_rx.h"
+```
 
 
 # リモコンコード解析
