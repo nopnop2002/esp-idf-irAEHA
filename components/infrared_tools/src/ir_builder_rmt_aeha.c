@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.#include <stdlib.h>
+#include <inttypes.h>
 #include <sys/cdefs.h>
 #include "esp_log.h"
 #include "ir_tools.h"
@@ -150,7 +151,7 @@ ir_builder_t *ir_builder_rmt_new_aeha(const ir_builder_config_t *config)
     ir_builder_t *ret = NULL;
     AEHA_CHECK(config, "aeha configuration can't be null", err, NULL);
     AEHA_CHECK(config->buffer_size, "buffer size can't be zero", err, NULL);
-    ESP_LOGI(__FUNCTION__, "config->buffer_size=%d", config->buffer_size);
+    ESP_LOGI(__FUNCTION__, "config->buffer_size=%"PRIu32, config->buffer_size);
 
     uint32_t builder_size = sizeof(aeha_builder_t) + config->buffer_size * sizeof(rmt_item32_t);
     aeha_builder_t *aeha_builder = calloc(1, builder_size);

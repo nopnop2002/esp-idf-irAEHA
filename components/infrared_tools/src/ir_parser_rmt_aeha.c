@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#include <inttypes.h>
 #include <stdlib.h>
 #include <sys/cdefs.h>
 #include "esp_log.h"
@@ -130,7 +131,7 @@ static esp_err_t aeha_parser_input(ir_parser_t *parser, void *raw_data, uint32_t
     aeha_parser_t *aeha_parser = __containerof(parser, aeha_parser_t, parent);
     AEHA_CHECK(raw_data, "input data can't be null", err, ESP_ERR_INVALID_ARG);
     aeha_parser->buffer = raw_data;
-	ESP_LOGD(__FUNCTION__, "length=%d", length);
+	ESP_LOGD(__FUNCTION__, "length=%"PRIu32, length);
     // Data Frame costs 2+16*n items and Repeat Frame costs 2 items
     aeha_parser->repeat = false;
     if (length == AEHA_REPEAT_FRAME_RMT_WORDS) {
@@ -157,7 +158,7 @@ static esp_err_t aeha_parser_get_scan_code(ir_parser_t *parser, uint32_t length,
     bool logic_value = false;
     aeha_parser_t *aeha_parser = __containerof(parser, aeha_parser_t, parent);
     AEHA_CHECK(length && ndata && repeat, "length, ndata and repeat can't be null", out, ESP_ERR_INVALID_ARG);
-	ESP_LOGD(__FUNCTION__, "length=%d", length);
+	ESP_LOGD(__FUNCTION__, "length=%"PRIu32, length);
     if (aeha_parser->repeat) {
         if (aeha_parse_repeat_frame(aeha_parser)) {
             *ndata = aeha_parser->last_ndata;
