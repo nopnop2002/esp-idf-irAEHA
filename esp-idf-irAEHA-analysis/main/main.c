@@ -8,6 +8,7 @@
 */
 
 #include <stdio.h>
+#include <inttypes.h>
 #include <string.h>
 
 #include "freertos/FreeRTOS.h"
@@ -18,8 +19,7 @@
 
 static const char *TAG = "AEHA";
 
-//static rmt_channel_t example_tx_channel = CONFIG_EXAMPLE_RMT_TX_CHANNEL;
-static rmt_channel_t example_rx_channel = CONFIG_EXAMPLE_RMT_RX_CHANNEL;
+static rmt_channel_t ir_rx_channel = RMT_CHANNEL_0;
 
 /**
  * @brief RMT Receive Task
@@ -34,19 +34,19 @@ static void example_ir_rx_task(void *arg)
 	RingbufHandle_t rb = NULL;
 	rmt_item32_t *items = NULL;
 
-	rmt_config_t rmt_rx_config = RMT_DEFAULT_CONFIG_RX(CONFIG_EXAMPLE_RMT_RX_GPIO, example_rx_channel);
+	rmt_config_t rmt_rx_config = RMT_DEFAULT_CONFIG_RX(CONFIG_EXAMPLE_RMT_RX_GPIO, ir_rx_channel);
 	rmt_config(&rmt_rx_config);
-	rmt_driver_install(example_rx_channel, 1000, 0);
-	ir_parser_config_t ir_parser_config = IR_PARSER_DEFAULT_CONFIG((ir_dev_t)example_rx_channel);
+	rmt_driver_install(ir_rx_channel, 1000, 0);
+	ir_parser_config_t ir_parser_config = IR_PARSER_DEFAULT_CONFIG((ir_dev_t)ir_rx_channel);
 	//ir_parser_config.flags |= IR_TOOLS_FLAGS_PROTO_EXT; // Using extended IR protocols (RC5 have extended version)
 	ir_parser_t *ir_parser = NULL;
 	ir_parser = ir_parser_rmt_new_aeha(&ir_parser_config);
 
 	//get RMT RX ringbuffer
-	rmt_get_ringbuf_handle(example_rx_channel, &rb);
+	rmt_get_ringbuf_handle(ir_rx_channel, &rb);
 	assert(rb != NULL);
 	// Start receive
-	rmt_rx_start(example_rx_channel, true);
+	rmt_rx_start(ir_rx_channel, true);
 	while (1) {
 		items = (rmt_item32_t *) xRingbufferReceive(rb, &length, portMAX_DELAY);
 		if (items) {
@@ -70,7 +70,7 @@ static void example_ir_rx_task(void *arg)
 
 	// Never reach here
 	ir_parser->del(ir_parser);
-	rmt_driver_uninstall(example_rx_channel);
+	rmt_driver_uninstall(ir_rx_channel);
 	vTaskDelete(NULL);
 }
 

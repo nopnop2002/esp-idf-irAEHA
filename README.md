@@ -29,10 +29,11 @@ idf.py menuconfig
 idf.py flash monitor
 ```
 
-赤外線受信モジュールをGPIO19に接続します。
+赤外線受信モジュールをGPIO34に接続します。
 赤外線送信機は使用しません。
-GPIO19を変更したい場合は、menuconfig で任意のGPIOに変更することができます。
+GPIO34を変更したい場合は、menuconfig で任意のGPIOに変更することができます。
 
+![ir_recv](https://github.com/nopnop2002/esp-idf-irAEHA/assets/6020549/4833ac0a-f042-4157-ab2d-03b1ba2c8a58)
 
 ファームをビルドしてボードに書き込んだら、モニターツールを実行してシリアル出力を表示します。   
 リモコンのボタンを押すと、受信した赤外線コードが表示されます。   
