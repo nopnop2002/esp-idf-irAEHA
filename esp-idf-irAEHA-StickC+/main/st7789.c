@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <inttypes.h>
 #include <string.h>
 #include <math.h>
 
@@ -186,7 +188,7 @@ bool spi_master_write_colors(TFT_t * dev, uint16_t * colors, uint16_t size)
 void delayMS(int ms) {
 	int _ms = ms + (portTICK_PERIOD_MS - 1);
 	TickType_t xTicksToDelay = _ms / portTICK_PERIOD_MS;
-	ESP_LOGD(TAG, "ms=%d _ms=%d portTICK_PERIOD_MS=%d xTicksToDelay=%d",ms,_ms,portTICK_PERIOD_MS,xTicksToDelay);
+	ESP_LOGD(TAG, "ms=%d _ms=%d portTICK_PERIOD_MS=%"PRIu32" xTicksToDelay=%"PRIu32,ms,_ms,portTICK_PERIOD_MS,xTicksToDelay);
 	vTaskDelay(xTicksToDelay);
 }
 
@@ -641,14 +643,6 @@ void lcdDrawFillArrow(TFT_t * dev, uint16_t x0,uint16_t y0,uint16_t x1,uint16_t 
 		lcdDrawLine(dev, x1, y1, L[0], L[1], color);
 		lcdDrawLine(dev, x1, y1, R[0], R[1], color);
 	}
-}
-
-
-// RGB565 conversion
-// RGB565 is R(5)+G(6)+B(5)=16bit color format.
-// Bit image "RRRRRGGGGGGBBBBB"
-uint16_t rgb565_conv(uint16_t r,uint16_t g,uint16_t b) {
-	return (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3));
 }
 
 // Draw ASCII character

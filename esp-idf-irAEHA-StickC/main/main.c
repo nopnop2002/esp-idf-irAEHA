@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -82,6 +83,13 @@
 #if CONFIG_STICKC
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 160
+#define OFFSET_X 26
+#define OFFSET_Y 1
+#define GPIO_MOSI 15
+#define GPIO_SCLK 13
+#define GPIO_CS 5
+#define GPIO_DC 23
+#define GPIO_RESET 18
 #define FONT_WIDTH 8
 #define FONT_HEIGHT 16
 #define MAX_CONFIG 20
@@ -96,14 +104,14 @@
 #if CONFIG_STICKC_PLUS
 #define SCREEN_WIDTH 135
 #define SCREEN_HEIGHT 240
-#define MOSI_GPIO 15
-#define SCLK_GPIO 13
-#define CS_GPIO 5 
-#define DC_GPIO 23
-#define RESET_GPIO 18
-#define BL_GPIO -1
 #define OFFSETX 52
 #define OFFSETY 40
+#define GPIO_MOSI 15
+#define GPIO_SCLK 13
+#define GPIO_CS 5
+#define GPIO_DC 23
+#define GPIO_RESET 18
+#define GPIO_BL -1
 #define FONT_WIDTH 8
 #define FONT_HEIGHT 16
 #define MAX_CONFIG 20
@@ -174,7 +182,7 @@ void buttonStick(void *pvParameters)
 			}
 			TickType_t endTick = xTaskGetTickCount();
 			TickType_t diffTick = endTick-startTick;
-			ESP_LOGI(pcTaskGetName(0),"diffTick=%d",diffTick);
+			ESP_LOGI(pcTaskGetName(0),"diffTick=%"PRIu32,diffTick);
 			cmdBuf.command = CMD_DOWN;
 			if (diffTick > 100) cmdBuf.command = CMD_SELECT;
 			xQueueSend(xQueueCmd, &cmdBuf, 0);
@@ -235,7 +243,7 @@ void buttonB(void *pvParameters)
 			}
 			TickType_t endTick = xTaskGetTickCount();
 			TickType_t diffTick = endTick-startTick;
-			ESP_LOGI(pcTaskGetName(0),"diffTick=%d",diffTick);
+			ESP_LOGI(pcTaskGetName(0),"diffTick=%"PRIu32,diffTick);
 			cmdBuf.command = CMD_DOWN;
 			if (diffTick > 100) cmdBuf.command = CMD_TOP;
 			xQueueSend(xQueueCmd, &cmdBuf, 0);
@@ -268,7 +276,7 @@ void buttonB(void *pvParameters)
 			}
 			TickType_t endTick = xTaskGetTickCount();
 			TickType_t diffTick = endTick-startTick;
-			ESP_LOGI(pcTaskGetName(0),"diffTick=%d",diffTick);
+			ESP_LOGI(pcTaskGetName(0),"diffTick=%"PRIu32,diffTick);
 			cmdBuf.command = CMD_DOWN;
 			if (diffTick > 100) cmdBuf.command = CMD_BOTTOM;
 			xQueueSend(xQueueCmd, &cmdBuf, 0);
@@ -301,7 +309,7 @@ void buttonC(void *pvParameters)
 			}
 			TickType_t endTick = xTaskGetTickCount();
 			TickType_t diffTick = endTick-startTick;
-			ESP_LOGI(pcTaskGetName(0),"diffTick=%d",diffTick);
+			ESP_LOGI(pcTaskGetName(0),"diffTick=%"PRIu32,diffTick);
 			cmdBuf.command = CMD_UP;
 			if (diffTick > 100) cmdBuf.command = CMD_TOP;
 			xQueueSend(xQueueCmd, &cmdBuf, 0);
@@ -437,13 +445,13 @@ void tft(void *pvParameters)
 	// Setup Screen
 #if CONFIG_STICKC
 	ST7735_t dev;
-	spi_master_init(&dev);
-	lcdInit(&dev, SCREEN_WIDTH, SCREEN_HEIGHT);
+	spi_master_init(&dev, GPIO_MOSI, GPIO_SCLK, GPIO_CS, GPIO_DC, GPIO_RESET);
+	lcdInit(&dev, SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET_X, OFFSET_Y);
 #endif
 
 #if CONFIG_STICKC_PLUS
 	TFT_t dev;
-	spi_master_init(&dev, MOSI_GPIO, SCLK_GPIO, CS_GPIO, DC_GPIO, RESET_GPIO, BL_GPIO);
+	spi_master_init(&dev, GPIO_MOSI, GPIO_SCLK, GPIO_CS, GPIO_DC, GPIO_RESET, GPIO_BL);
 	lcdInit(&dev, SCREEN_WIDTH, SCREEN_HEIGHT, OFFSETX, OFFSETY);
 #endif
 
